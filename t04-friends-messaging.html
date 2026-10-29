@@ -1,0 +1,438 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>GameNite T04 wireframes: Friends, Messages, Chat</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Fredoka:wght@500;600;700&family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/js/all.min.js" defer></script>
+<style>
+:root {
+  --red: #c8102e;
+  --red-dark: #8f0b21;
+  --black: #111111;
+  --page: #f4f4f4;
+  --surface: #ffffff;
+  --box: #f0f0f0;
+  --line: #d6d6d6;
+  --ink: #111111;
+  --muted: #5f5f5f;
+  --note: #c8102e;
+  --note-bg: #fff4f5;
+  --danger: #b0002a;
+  --ok: #1f8a4c;
+  --gold: #f2b705;
+  color-scheme: light;
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+*, *::before, *::after { box-sizing: inherit; }
+body {
+  margin: 0; color: var(--ink);
+  background-color: var(--page);
+  background-image: radial-gradient(#dcdcdc 1.2px, transparent 1.2px);
+  background-size: 20px 20px;
+  font-family: "Nunito", system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: 15px; line-height: 1.5;
+}
+h1, h2, h3, h4, .btn, .tabs a, .title, .stateswitch button, .badge, .m, .pill, .tier {
+  font-family: "Fredoka", "Nunito", system-ui, sans-serif;
+}
+.wrap { max-width: 1200px; margin: 0 auto; padding: 28px 20px 56px; }
+h1 { font-size: 2rem; margin: 0 0 6px; display: flex; align-items: center; gap: 12px; letter-spacing: .2px; }
+h1 .logo {
+  display: inline-grid; place-items: center; width: 46px; height: 46px; border-radius: 14px;
+  background: var(--red); color: #fff; border: 3px solid var(--black); box-shadow: 3px 3px 0 var(--black);
+  transform: rotate(-6deg); font-size: 1.3rem;
+}
+.intro { color: var(--muted); margin: 0 0 18px; max-width: 72ch; }
+.legend { display: flex; gap: 16px; flex-wrap: wrap; color: var(--muted); font-size: 0.9rem; margin: 0 0 18px; }
+.legend span { display: inline-flex; gap: 8px; align-items: center; }
+.dashed { width: 28px; height: 16px; border: 2px dashed var(--red); border-radius: 5px; display: inline-block; }
+
+/* Screen tabs: chunky arcade buttons */
+.tabs { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 22px; }
+.tabs a {
+  text-decoration: none; color: var(--ink); background: var(--surface);
+  border: 3px solid var(--black); border-radius: 14px; padding: 8px 16px; font-weight: 600;
+  box-shadow: 0 4px 0 var(--black); display: inline-flex; gap: 8px; align-items: center;
+}
+.tabs a[aria-current="page"] { background: var(--red); color: #fff; }
+.tabs a:focus-visible, button:focus-visible, input:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
+
+.screen { display: none; }
+.screen.active { display: grid; grid-template-columns: minmax(0, 1fr) 310px; gap: 24px; align-items: start; }
+@media (max-width: 920px) { .screen.active { grid-template-columns: 1fr; } }
+
+/* App frame: GameNite layout (header, sidebar, main) as a game card */
+.frame {
+  position: relative; background: var(--surface); border: 3px solid var(--black);
+  border-radius: 20px; overflow: hidden; box-shadow: 7px 7px 0 var(--black);
+}
+.appbar {
+  display: flex; align-items: center; gap: 12px; padding: 12px 16px; flex-wrap: wrap;
+  background: var(--black); color: #fff; border-bottom: 5px solid var(--red); font-size: 0.9rem;
+}
+.appbar .title { font-weight: 700; font-size: 1.25rem; margin-right: auto; display: inline-flex; gap: 8px; align-items: center; }
+.appbar .title i, .appbar .title svg { color: var(--red); }
+.appbar .xp { display: inline-flex; gap: 6px; align-items: center; background: #2a2a2a; border-radius: 999px; padding: 3px 10px; font-weight: 700; }
+.appbar .xp i, .appbar .xp svg { color: var(--gold); }
+.appbar .btn.quiet { color: #fff; border-color: #fff; background: transparent; box-shadow: none; }
+.appbody { display: grid; grid-template-columns: 168px minmax(0, 1fr); min-height: 540px; }
+@media (max-width: 580px) { .appbody { grid-template-columns: 1fr; } .side { display: none; } }
+.side { border-right: 3px solid var(--black); padding: 14px 10px; display: flex; flex-direction: column; gap: 6px; background: #fafafa; }
+.side > span { padding: 8px 10px; border-radius: 12px; display: flex; gap: 10px; align-items: center; font-weight: 700; }
+.side > span i, .side > span svg { width: 18px; color: var(--muted); }
+.side > span.on { background: var(--red); color: #fff; box-shadow: 0 3px 0 var(--red-dark); }
+.side > span.on i, .side > span.on svg { color: #fff; }
+.side > span.new { outline: 2px dashed var(--red); outline-offset: 2px; }
+.side .badge { margin-left: auto; }
+.badge {
+  background: var(--gold); color: var(--black); border: 2px solid var(--black); border-radius: 999px;
+  font-size: 0.75rem; font-weight: 700; padding: 0 7px; min-width: 22px; text-align: center;
+}
+.main { padding: 20px; min-width: 0; }
+.main h2 { margin: 0 0 14px; font-size: 1.45rem; display: flex; gap: 10px; align-items: center; }
+.main h2 i, .main h2 svg { color: var(--red); }
+.main h3 {
+  margin: 24px 0 8px; font-size: 0.85rem; color: var(--muted); font-weight: 600;
+  text-transform: uppercase; letter-spacing: .08em;
+}
+
+.row { display: flex; align-items: center; gap: 10px; padding: 10px 6px; border-bottom: 2px dashed var(--box); flex-wrap: wrap; }
+.row:last-child { border-bottom: 0; }
+.av {
+  width: 40px; height: 40px; border-radius: 12px; background: var(--black); color: #fff;
+  border: 2px solid var(--black); flex: none; position: relative; display: grid; place-items: center;
+}
+.av::before { content: "\2605"; font-size: 1rem; color: var(--gold); }
+.av.red { background: var(--red); }
+.av.on::after, .av.off::after {
+  content: ""; position: absolute; right: -4px; bottom: -4px; width: 13px; height: 13px;
+  border-radius: 50%; border: 2px solid var(--surface);
+}
+.av.on::after { background: var(--ok); }
+.av.off::after { background: #a8a8a8; }
+.who { min-width: 0; flex: 1; }
+.who b { display: block; }
+.who small { color: var(--muted); }
+
+/* Buttons: chunky with a pressed-down shadow */
+.btn {
+  border: 2px solid var(--black); background: var(--red); color: #fff; font-weight: 600;
+  font-size: 0.88rem; padding: 6px 13px; border-radius: 12px; cursor: default;
+  box-shadow: 0 3px 0 var(--black); display: inline-flex; gap: 7px; align-items: center;
+}
+.btn.ghost { background: var(--surface); color: var(--ink); }
+.btn.quiet { background: var(--box); color: var(--ink); border-color: var(--line); box-shadow: 0 3px 0 var(--line); }
+.btn[disabled] { opacity: 0.45; }
+.field {
+  display: flex; gap: 8px; align-items: center; border: 3px solid var(--black);
+  border-radius: 14px; padding: 7px 10px; background: var(--surface);
+}
+.field > i, .field > svg { color: var(--muted); }
+.field input { border: 0; background: transparent; font: inherit; color: var(--ink); flex: 1; min-width: 0; outline: none; }
+.empty {
+  border: 2px dashed var(--line); border-radius: 14px; padding: 14px; color: var(--muted);
+  text-align: center; background: #fcfcfc;
+}
+.err { color: var(--danger); font-size: 0.88rem; font-weight: 700; margin-top: 6px; display: flex; gap: 6px; align-items: center; }
+.pill {
+  font-size: 0.78rem; color: var(--ink); border: 2px solid var(--black); border-radius: 999px;
+  padding: 1px 9px; background: var(--box); display: inline-flex; gap: 5px; align-items: center;
+}
+
+/* Note markers: red coins */
+.m {
+  display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 50%;
+  background: var(--red); color: #fff; border: 2px solid var(--black); font-size: 0.72rem;
+  font-weight: 700; flex: none; box-shadow: 1px 2px 0 var(--black);
+}
+.notes { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 12px); }
+.notes h4 { margin: 0 0 12px; font-size: 1.15rem; display: flex; gap: 8px; align-items: center; }
+.notes h4 i, .notes h4 svg { color: var(--red); }
+.notes ol { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+.notes li {
+  display: grid; grid-template-columns: 22px 1fr; gap: 10px; background: var(--surface);
+  border: 2px solid var(--black); border-left: 6px solid var(--red); border-radius: 12px;
+  padding: 10px; font-size: 0.88rem; box-shadow: 3px 3px 0 var(--black);
+}
+.notes code { font-size: 0.8rem; overflow-wrap: anywhere; background: var(--box); padding: 0 4px; border-radius: 4px; }
+.notes .tag { color: var(--red); font-weight: 800; }
+
+.stateswitch { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+.stateswitch button {
+  font: inherit; font-family: "Fredoka", "Nunito", sans-serif; font-size: 0.85rem; font-weight: 600;
+  border: 2px solid var(--black); background: var(--surface); color: var(--ink);
+  padding: 5px 12px; border-radius: 999px; cursor: pointer; box-shadow: 0 3px 0 var(--black);
+}
+.stateswitch button[aria-pressed="true"] { background: var(--black); color: #fff; }
+.hidden { display: none !important; }
+.des { outline: 2px dashed var(--red); outline-offset: 3px; border-radius: 10px; }
+@media (prefers-reduced-motion: no-preference) {
+  .tabs a, .btn, .stateswitch button { transition: transform .12s ease, box-shadow .12s ease; }
+  .tabs a:hover, .stateswitch button:hover { transform: translateY(-2px); }
+}
+
+/* Chat */
+.chat { display: flex; flex-direction: column; height: 540px; }
+.chathead { display: flex; align-items: center; gap: 10px; padding-bottom: 12px; border-bottom: 3px solid var(--black); flex-wrap: wrap; }
+.history { flex: 1; overflow-y: auto; padding: 14px 4px; display: flex; flex-direction: column; gap: 12px; }
+.older { align-self: center; }
+.msg { max-width: 72%; }
+.msg .bubble { background: var(--box); border: 2px solid var(--black); border-radius: 16px 16px 16px 4px; padding: 8px 12px; }
+.msg.mine { align-self: flex-end; text-align: right; }
+.msg.mine .bubble { background: var(--red); color: #fff; text-align: left; border-radius: 16px 16px 4px 16px; box-shadow: 0 3px 0 var(--black); }
+.msg small { color: var(--muted); font-size: 0.75rem; display: block; margin-top: 3px; }
+.composer { border-top: 3px solid var(--black); padding-top: 12px; }
+.composer .meta { display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--muted); margin-top: 6px; }
+.readonly { border: 2px dashed var(--line); border-radius: 14px; padding: 12px; color: var(--muted); display: flex; gap: 8px; align-items: center; }
+@media (prefers-reduced-motion: no-preference) { .history { scroll-behavior: smooth; } }
+
+/* Mystery layer: detective case-file look on top of the game styles */
+body {
+  background-color: #e8e1d2;
+  background-image:
+    radial-gradient(rgba(0, 0, 0, .07) 1px, transparent 1px),
+    radial-gradient(circle at 15% 10%, rgba(200, 16, 46, .06), transparent 40%),
+    radial-gradient(circle at 85% 90%, rgba(0, 0, 0, .08), transparent 45%);
+  background-size: 22px 22px, 100% 100%, 100% 100%;
+}
+h1, h2, h3, h4, .btn, .tabs a, .title, .stateswitch button, .pill, .tier, .badge, .stamp,
+.stats b, .price, .box > b, .chip, .appbar .xp {
+  font-family: "Special Elite", "Courier New", ui-monospace, monospace;
+}
+h1 { font-size: 2.1rem; flex-wrap: wrap; }
+h1 .logo { background: var(--black); color: #fff; transform: rotate(-8deg); }
+.stamp {
+  display: inline-block; border: 3px solid var(--red); color: var(--red); text-transform: uppercase;
+  letter-spacing: .14em; padding: 3px 12px; transform: rotate(-6deg); font-size: .85rem;
+  border-radius: 6px; opacity: .9; background: rgba(255, 255, 255, .4);
+}
+.intro { color: #4a4337; }
+.tabs a { border-radius: 14px 14px 4px 4px; background: #fffaf0; }
+.tabs a[aria-current="page"] { background: var(--red); color: #fff; }
+.frame { background: #fffdf8; }
+.appbar .case { background: var(--red); color: #fff; border-radius: 6px; padding: 2px 8px; font-family: "Special Elite", monospace; font-size: .78rem; letter-spacing: .08em; text-transform: uppercase; }
+.side { background: #f5efe2; }
+.main { background-image: repeating-linear-gradient(transparent 0 29px, rgba(0, 0, 0, .035) 29px 30px); }
+.empty { background: #fffaf0; border-color: #c9bfa8; }
+.row { border-bottom-color: #ebe3d2; }
+
+/* Note markers look like red map pins */
+.m { background: radial-gradient(circle at 35% 30%, #ff7186, var(--red) 55%, #7a0016); }
+
+/* Case notes: taped evidence cards */
+.notes li { position: relative; background: #fffaf0; transform: rotate(-0.6deg); }
+.notes li:nth-child(even) { transform: rotate(0.6deg); }
+.notes li::before {
+  content: ""; position: absolute; top: -9px; left: 50%; width: 56px; height: 16px; margin-left: -28px;
+  background: rgba(200, 16, 46, .22); border: 1px dashed rgba(0, 0, 0, .18); transform: rotate(-4deg);
+}
+.notes h4 { font-size: 1.25rem; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1><span class="logo"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i></span>Friends and private messaging wireframes <span class="stamp">Case file · Story 1</span></h1>
+  <p class="intro">T04 for Story 1 (Friends, Messaging, Private Games, and Moderation), CS4530 Group 202. Three screens built on the existing GameNite layout (header, sidebar, main area). Each numbered marker matches a note that names the condition of satisfaction and the API from the T03 spec.</p>
+  <div class="legend">
+    <span><span class="m">1</span> Note on the right</span>
+    <span><span class="dashed"></span> Desirable (Sprint 3), not needed for the MVP</span>
+  </div>
+
+  <nav class="tabs" aria-label="Screens">
+    <a href="#friends" data-view="friends"><i class="fa-solid fa-user-group" aria-hidden="true"></i> Friends page</a>
+    <a href="#inbox" data-view="inbox"><i class="fa-solid fa-inbox" aria-hidden="true"></i> Messages inbox</a>
+    <a href="#chat" data-view="chat"><i class="fa-solid fa-comment-dots" aria-hidden="true"></i> Chat window</a>
+  </nav>
+
+  <!-- FRIENDS PAGE -->
+  <section class="screen" id="view-friends" aria-label="Friends page">
+    <div class="frame">
+      <div class="appbar"><span class="title"><i class="fa-solid fa-user-secret" aria-hidden="true"></i> GameNite!</span><span class="case">Case #202</span><span class="xp"><i class="fa-solid fa-star" aria-hidden="true"></i> 1,320 XP</span>signed in as Yāo <button class="btn quiet"><i class="fa-solid fa-right-from-bracket" aria-hidden="true"></i> Log Out</button></div>
+      <div class="appbody">
+        <div class="side">
+          <span><i class="fa-solid fa-house" aria-hidden="true"></i> Home</span><span><i class="fa-solid fa-gamepad" aria-hidden="true"></i> Games</span><span><i class="fa-solid fa-comments" aria-hidden="true"></i> Forum</span>
+          <span class="on new"><i class="fa-solid fa-user-group" aria-hidden="true"></i> Friends <span class="badge">1</span></span>
+          <span class="new"><i class="fa-solid fa-envelope" aria-hidden="true"></i> Messages <span class="badge">3</span></span>
+          <span><i class="fa-solid fa-user-astronaut" aria-hidden="true"></i> Profile</span>
+        </div>
+        <div class="main">
+          <h2><i class="fa-solid fa-user-group" aria-hidden="true"></i> Friends</h2>
+          <div class="empty" style="text-align:left;margin-bottom:14px"><span class="m">8</span> Verify your email to send friend requests and messages. We sent a link to yao@example.com. <button class="btn ghost" style="margin-left:6px"><i class="fa-solid fa-paper-plane" aria-hidden="true"></i> Resend link</button></div>
+
+          <div style="display:flex;gap:8px;align-items:center">
+            <span class="m">1</span>
+            <div class="field" style="flex:1"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i><input aria-label="Search users" value="user" readonly><button class="btn"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i> Search</button></div>
+          </div>
+          <div style="margin-top:6px">
+            <div class="row"><div class="av"></div><div class="who"><b>The Knight Of Games</b><small>user0</small></div><span class="m">2</span><button class="btn"><i class="fa-solid fa-user-plus" aria-hidden="true"></i> Send request</button></div>
+            <div class="row"><div class="av"></div><div class="who"><b>Sénior Dos</b><small>user2</small></div><span class="pill"><i class="fa-solid fa-check" aria-hidden="true"></i> Friends</span></div>
+            <div class="row"><div class="av"></div><div class="who"><b>Frau Drei</b><small>user3</small></div><span class="pill"><i class="fa-solid fa-hourglass-half" aria-hidden="true"></i> Request sent</span></div>
+          </div>
+          <div class="err"><span class="m" style="width:16px;height:16px;font-size:.65rem">3</span> You already have a pending request with this user</div>
+
+          <h3>Requests for you</h3>
+          <div class="row"><div class="av"></div><div class="who"><b>Frau Drei</b><small>user3 · sent 2 hours ago</small></div><span class="m">4</span><button class="btn"><i class="fa-solid fa-check" aria-hidden="true"></i> Accept</button><button class="btn ghost"><i class="fa-solid fa-xmark" aria-hidden="true"></i> Decline</button></div>
+
+          <h3>Requests you sent</h3>
+          <div class="row"><div class="av"></div><div class="who"><b>Player Five</b><small>user5 · sent yesterday</small></div><span class="m">5</span><button class="btn quiet"><i class="fa-solid fa-ban" aria-hidden="true"></i> Cancel request</button></div>
+
+          <h3>Your friends (3)</h3>
+          <div class="row"><div class="av red on"></div><div class="who"><b>Sénior Dos</b><small>Playing Clue at Northeastern</small></div><span class="m">6</span><button class="btn"><i class="fa-solid fa-message" aria-hidden="true"></i> Message</button><button class="btn quiet"><i class="fa-solid fa-user-minus" aria-hidden="true"></i> Remove</button></div>
+          <div class="row"><div class="av red on"></div><div class="who"><b>Frau Drei</b><small>In a lobby for Nim</small></div><button class="btn"><i class="fa-solid fa-message" aria-hidden="true"></i> Message</button><button class="btn quiet"><i class="fa-solid fa-user-minus" aria-hidden="true"></i> Remove</button></div>
+          <div class="row"><div class="av off"></div><div class="who"><b>The Knight Of Games</b><small>Offline</small></div><button class="btn"><i class="fa-solid fa-message" aria-hidden="true"></i> Message</button><button class="btn quiet"><i class="fa-solid fa-user-minus" aria-hidden="true"></i> Remove</button></div>
+
+          <h3>Empty states</h3>
+          <div class="empty"><span class="m">7</span> <i class="fa-solid fa-ghost" aria-hidden="true"></i> No friends yet. Search for a player above to send a friend request.</div>
+        </div>
+      </div>
+    </div>
+    <aside class="notes" aria-label="Friends page notes">
+      <h4><i class="fa-solid fa-fingerprint" aria-hidden="true"></i> Case notes</h4>
+      <ol>
+        <li><span class="m">1</span><div><span class="tag">COS 1.2</span> Search by username prefix, up to 20 results. <code>POST /api/friend/search</code></div></li>
+        <li><span class="m">2</span><div><span class="tag">COS 1.2</span> The button depends on <code>relationship</code>: Send request (none), Accept (incoming), Request sent (outgoing), Friends (friend). Your own name shows no button. A request can also be sent from a profile page.</div></li>
+        <li><span class="m">3</span><div><span class="tag">COS 1.3</span> Errors show inline under the search, using the <code>FRIEND_ERRORS</code> text, and nothing is saved. A user who blocked you shows the same “User not found” error.</div></li>
+        <li><span class="m">4</span><div><span class="tag">COS 1.2</span> Accept adds both users as friends. Decline removes the request with no notice to the sender. <code>/request/accept</code>, <code>/request/decline</code></div></li>
+        <li><span class="m">5</span><div><span class="tag">COS 1.2</span> Only unanswered requests appear here. <code>/request/cancel</code></div></li>
+        <li><span class="m">6</span><div><span class="tag">COS 1.4, 1.6</span> Each friend shows live activity (Offline, Online, In a lobby for a game, or Playing a game), updated within a few seconds. Only friends can see it. Message opens the chat window. Remove asks to confirm, then updates both users.</div></li>
+        <li><span class="m">7</span><div>Each section has its own empty state. The page updates live from <code>friendsUpdated</code>.</div></li>
+        <li><span class="m">8</span><div><span class="tag">COS 1.1</span> Shown only to unverified users. Sending requests and messages is blocked until the email link is used. Links expire after 24 hours; Resend sends a new one.</div></li>
+      </ol>
+    </aside>
+  </section>
+
+  <!-- INBOX -->
+  <section class="screen" id="view-inbox" aria-label="Messages inbox">
+    <div class="frame">
+      <div class="appbar"><span class="title"><i class="fa-solid fa-user-secret" aria-hidden="true"></i> GameNite!</span><span class="case">Case #202</span><span class="xp"><i class="fa-solid fa-star" aria-hidden="true"></i> 1,320 XP</span>signed in as Yāo <button class="btn quiet"><i class="fa-solid fa-right-from-bracket" aria-hidden="true"></i> Log Out</button></div>
+      <div class="appbody">
+        <div class="side">
+          <span><i class="fa-solid fa-house" aria-hidden="true"></i> Home</span><span><i class="fa-solid fa-gamepad" aria-hidden="true"></i> Games</span><span><i class="fa-solid fa-comments" aria-hidden="true"></i> Forum</span>
+          <span class="new"><i class="fa-solid fa-user-group" aria-hidden="true"></i> Friends <span class="badge">1</span></span>
+          <span class="on new"><i class="fa-solid fa-envelope" aria-hidden="true"></i> Messages <span class="badge">3</span></span>
+          <span><i class="fa-solid fa-user-astronaut" aria-hidden="true"></i> Profile</span>
+        </div>
+        <div class="main">
+          <h2><i class="fa-solid fa-inbox" aria-hidden="true"></i> Messages</h2>
+          <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px"><span class="m">1</span><small style="color:var(--muted)">Most recent first</small></div>
+          <div class="row"><div class="av red on"></div><div class="who"><b>Sénior Dos</b><small>You: rematch tonight?</small></div><small style="color:var(--muted)">2m</small></div>
+          <div class="row"><div class="av off"></div><div class="who"><b>The Knight Of Games</b><small>gg, that last move was rough</small></div><span class="m">2</span><span class="badge">3</span><small style="color:var(--muted)">1h</small></div>
+          <div class="row"><div class="av"></div><div class="who"><b>Player Five</b><small>No messages yet</small></div><span class="m">3</span><small style="color:var(--muted)">Mon</small></div>
+
+          <h3>Empty state</h3>
+          <div class="empty"><span class="m">4</span> <i class="fa-solid fa-comment-slash" aria-hidden="true"></i> No conversations yet. Open the Friends page and choose Message next to a friend.</div>
+        </div>
+      </div>
+    </div>
+    <aside class="notes" aria-label="Inbox notes">
+      <h4><i class="fa-solid fa-fingerprint" aria-hidden="true"></i> Case notes</h4>
+      <ol>
+        <li><span class="m">1</span><div><span class="tag">COS 1.6</span> Sorted by the newest message, falling back to when the conversation was opened. <code>POST /api/conversation/list</code></div></li>
+        <li><span class="m">2</span><div><span class="tag">COS 1.12, Desirable</span> Unread count per conversation. It updates in every open tab from <code>dmReadUpdated</code>. The sidebar total is the sum.</div></li>
+        <li><span class="m">3</span><div>A conversation can exist with no messages if a friend opened it and didn’t send anything.</div></li>
+        <li><span class="m">4</span><div>A new <code>dmNewMessage</code> moves that row to the top without a refresh (COS 1.6).</div></li>
+      </ol>
+    </aside>
+  </section>
+
+  <!-- CHAT -->
+  <section class="screen" id="view-chat" aria-label="Chat window">
+    <div class="frame">
+      <div class="appbar"><span class="title"><i class="fa-solid fa-user-secret" aria-hidden="true"></i> GameNite!</span><span class="case">Case #202</span><span class="xp"><i class="fa-solid fa-star" aria-hidden="true"></i> 1,320 XP</span>signed in as Yāo <button class="btn quiet"><i class="fa-solid fa-right-from-bracket" aria-hidden="true"></i> Log Out</button></div>
+      <div class="appbody">
+        <div class="side">
+          <span><i class="fa-solid fa-house" aria-hidden="true"></i> Home</span><span><i class="fa-solid fa-gamepad" aria-hidden="true"></i> Games</span><span><i class="fa-solid fa-comments" aria-hidden="true"></i> Forum</span>
+          <span class="new"><i class="fa-solid fa-user-group" aria-hidden="true"></i> Friends <span class="badge">1</span></span>
+          <span class="on new"><i class="fa-solid fa-envelope" aria-hidden="true"></i> Messages <span class="badge">3</span></span>
+          <span><i class="fa-solid fa-user-astronaut" aria-hidden="true"></i> Profile</span>
+        </div>
+        <div class="main">
+          <div class="stateswitch" role="group" aria-label="Chat state">
+            <button type="button" data-state="normal" aria-pressed="true">Normal</button>
+            <button type="button" data-state="error" aria-pressed="false">Message too long</button>
+            <button type="button" data-state="flagged" aria-pressed="false">Flagged by moderation</button>
+            <button type="button" data-state="unfriended" aria-pressed="false">No longer friends</button>
+          </div>
+          <div class="chat">
+            <div class="chathead">
+              <span class="btn quiet"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i> Back</span>
+              <div class="av red on"></div><div class="who"><b>Sénior Dos</b><small>user2 · Online</small></div>
+              <span class="m">6</span><button class="btn quiet"><i class="fa-solid fa-flag" aria-hidden="true"></i> Report</button><button class="btn quiet"><i class="fa-solid fa-user-slash" aria-hidden="true"></i> Block</button>
+            </div>
+            <div class="history">
+              <button class="btn quiet older"><span class="m" style="width:16px;height:16px;font-size:.65rem;margin-right:4px">1</span><i class="fa-solid fa-clock-rotate-left" aria-hidden="true"></i> Load older messages</button>
+              <div class="msg"><div class="bubble">that nim game was close</div><small>Sénior Dos · 7:41 PM</small></div>
+              <div class="msg mine"><div class="bubble">I got lucky on the last pile</div><small>You · 7:42 PM</small></div>
+              <div class="msg"><div class="bubble">play again later?</div><small>Sénior Dos · 7:44 PM</small></div>
+              <div class="msg mine"><div class="bubble">rematch tonight?</div><small>You · 7:46 PM <span class="m" style="width:16px;height:16px;font-size:.65rem">2</span></small></div>
+            </div>
+            <div class="composer" data-part="composer">
+              <div class="field"><input aria-label="Message" value="see you at 8" readonly data-part="input"><span class="m">3</span><button class="btn" data-part="send"><i class="fa-solid fa-paper-plane" aria-hidden="true"></i> Send</button></div>
+              <div class="err hidden" data-part="error"><span class="m" style="width:16px;height:16px;font-size:.65rem">4</span> <span data-part="errtext">Message must be 1000 characters or fewer</span></div>
+              <div class="meta"><span>Enter to send</span><span data-part="count">12 / 1000</span></div>
+            </div>
+            <div class="readonly hidden" data-part="readonly"><i class="fa-solid fa-lock" aria-hidden="true"></i><span class="m">5</span> You’re no longer friends with Sénior Dos. You can read this conversation, but you can’t send new messages.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <aside class="notes" aria-label="Chat notes">
+      <h4><i class="fa-solid fa-fingerprint" aria-hidden="true"></i> Case notes</h4>
+      <ol>
+        <li><span class="m">1</span><div><span class="tag">COS 1.6</span> Opens with the newest 50 messages, oldest at the top. This button loads the next page. <code>POST /api/conversation/open</code>, <code>/history</code></div></li>
+        <li><span class="m">2</span><div><span class="tag">COS 1.6</span> Every message shows the sender and time. New messages arrive live from <code>dmNewMessage</code> in every tab.</div></li>
+        <li><span class="m">3</span><div><span class="tag">COS 1.6</span> Send is disabled when the box is empty or only spaces, and the counter warns near 1000. The server checks again on <code>dmSend</code>.</div></li>
+        <li><span class="m">4</span><div><span class="tag">COS 1.6, 1.9</span> If the server rejects a message (too long, or flagged by moderation), it isn’t delivered, the text stays in the box, and the <code>dmError</code> reason shows here.</div></li>
+        <li><span class="m">5</span><div><span class="tag">COS 1.4</span> After a friend is removed, history stays readable and the composer is replaced (<code>canSend: false</code>). Open question 5 in the spec.</div></li>
+        <li><span class="m">6</span><div><span class="tag">COS 1.8</span> Report a user or a specific message with a reason; reports are saved for moderators. Block removes the friendship and stops requests, messages, invites, and private-game joins. Wired up in T32.</div></li>
+      </ol>
+    </aside>
+  </section>
+</div>
+
+<script>
+(function () {
+  var views = ["friends", "inbox", "chat"];
+  function show(view) {
+    if (views.indexOf(view) === -1) view = "friends";
+    views.forEach(function (v) {
+      document.getElementById("view-" + v).classList.toggle("active", v === view);
+    });
+    document.querySelectorAll(".tabs a").forEach(function (a) {
+      if (a.dataset.view === view) a.setAttribute("aria-current", "page");
+      else a.removeAttribute("aria-current");
+    });
+  }
+  window.addEventListener("hashchange", function () { show(location.hash.slice(1)); });
+  show(location.hash.slice(1));
+
+  var chat = document.getElementById("view-chat");
+  var part = function (name) { return chat.querySelector('[data-part="' + name + '"]'); };
+  chat.querySelectorAll(".stateswitch button").forEach(function (b) {
+    b.addEventListener("click", function () {
+      var s = b.dataset.state;
+      chat.querySelectorAll(".stateswitch button").forEach(function (x) {
+        x.setAttribute("aria-pressed", String(x === b));
+      });
+      part("composer").classList.toggle("hidden", s === "unfriended");
+      part("readonly").classList.toggle("hidden", s !== "unfriended");
+      part("error").classList.toggle("hidden", s !== "error" && s !== "flagged");
+      part("errtext").textContent = s === "flagged"
+        ? "This message was flagged by moderation and wasn\u2019t sent."
+        : "Message must be 1000 characters or fewer";
+      part("count").textContent = s === "error" ? "1042 / 1000" : "12 / 1000";
+      part("count").style.color = s === "error" ? "var(--danger)" : "";
+      part("send").disabled = s === "error";
+    });
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,559 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>GameNite T10 wireframes: XP, tiers, avatars, and trading</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Fredoka:wght@500;600;700&family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/js/all.min.js" defer></script>
+<style>
+:root {
+  --red: #c8102e;
+  --red-dark: #8f0b21;
+  --black: #111111;
+  --page: #f4f4f4;
+  --surface: #ffffff;
+  --box: #f0f0f0;
+  --line: #d6d6d6;
+  --ink: #111111;
+  --muted: #5f5f5f;
+  --note: #c8102e;
+  --note-bg: #fff4f5;
+  --danger: #b0002a;
+  --ok: #1f8a4c;
+  --gold: #f2b705;
+  color-scheme: light;
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+*, *::before, *::after { box-sizing: inherit; }
+body {
+  margin: 0; color: var(--ink);
+  background-color: var(--page);
+  background-image: radial-gradient(#dcdcdc 1.2px, transparent 1.2px);
+  background-size: 20px 20px;
+  font-family: "Nunito", system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: 15px; line-height: 1.5;
+}
+h1, h2, h3, h4, .btn, .tabs a, .title, .stateswitch button, .badge, .m, .pill, .tier {
+  font-family: "Fredoka", "Nunito", system-ui, sans-serif;
+}
+.wrap { max-width: 1200px; margin: 0 auto; padding: 28px 20px 56px; }
+h1 { font-size: 2rem; margin: 0 0 6px; display: flex; align-items: center; gap: 12px; letter-spacing: .2px; }
+h1 .logo {
+  display: inline-grid; place-items: center; width: 46px; height: 46px; border-radius: 14px;
+  background: var(--red); color: #fff; border: 3px solid var(--black); box-shadow: 3px 3px 0 var(--black);
+  transform: rotate(-6deg); font-size: 1.3rem;
+}
+.intro { color: var(--muted); margin: 0 0 18px; max-width: 72ch; }
+.legend { display: flex; gap: 16px; flex-wrap: wrap; color: var(--muted); font-size: 0.9rem; margin: 0 0 18px; }
+.legend span { display: inline-flex; gap: 8px; align-items: center; }
+.dashed { width: 28px; height: 16px; border: 2px dashed var(--red); border-radius: 5px; display: inline-block; }
+
+/* Screen tabs: chunky arcade buttons */
+.tabs { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 22px; }
+.tabs a {
+  text-decoration: none; color: var(--ink); background: var(--surface);
+  border: 3px solid var(--black); border-radius: 14px; padding: 8px 16px; font-weight: 600;
+  box-shadow: 0 4px 0 var(--black); display: inline-flex; gap: 8px; align-items: center;
+}
+.tabs a[aria-current="page"] { background: var(--red); color: #fff; }
+.tabs a:focus-visible, button:focus-visible, input:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
+
+.screen { display: none; }
+.screen.active { display: grid; grid-template-columns: minmax(0, 1fr) 310px; gap: 24px; align-items: start; }
+@media (max-width: 920px) { .screen.active { grid-template-columns: 1fr; } }
+
+/* App frame: GameNite layout (header, sidebar, main) as a game card */
+.frame {
+  position: relative; background: var(--surface); border: 3px solid var(--black);
+  border-radius: 20px; overflow: hidden; box-shadow: 7px 7px 0 var(--black);
+}
+.appbar {
+  display: flex; align-items: center; gap: 12px; padding: 12px 16px; flex-wrap: wrap;
+  background: var(--black); color: #fff; border-bottom: 5px solid var(--red); font-size: 0.9rem;
+}
+.appbar .title { font-weight: 700; font-size: 1.25rem; margin-right: auto; display: inline-flex; gap: 8px; align-items: center; }
+.appbar .title i, .appbar .title svg { color: var(--red); }
+.appbar .xp { display: inline-flex; gap: 6px; align-items: center; background: #2a2a2a; border-radius: 999px; padding: 3px 10px; font-weight: 700; }
+.appbar .xp i, .appbar .xp svg { color: var(--gold); }
+.appbar .btn.quiet { color: #fff; border-color: #fff; background: transparent; box-shadow: none; }
+.appbody { display: grid; grid-template-columns: 168px minmax(0, 1fr); min-height: 540px; }
+@media (max-width: 580px) { .appbody { grid-template-columns: 1fr; } .side { display: none; } }
+.side { border-right: 3px solid var(--black); padding: 14px 10px; display: flex; flex-direction: column; gap: 6px; background: #fafafa; }
+.side > span { padding: 8px 10px; border-radius: 12px; display: flex; gap: 10px; align-items: center; font-weight: 700; }
+.side > span i, .side > span svg { width: 18px; color: var(--muted); }
+.side > span.on { background: var(--red); color: #fff; box-shadow: 0 3px 0 var(--red-dark); }
+.side > span.on i, .side > span.on svg { color: #fff; }
+.side > span.new { outline: 2px dashed var(--red); outline-offset: 2px; }
+.side .badge { margin-left: auto; }
+.badge {
+  background: var(--gold); color: var(--black); border: 2px solid var(--black); border-radius: 999px;
+  font-size: 0.75rem; font-weight: 700; padding: 0 7px; min-width: 22px; text-align: center;
+}
+.main { padding: 20px; min-width: 0; }
+.main h2 { margin: 0 0 14px; font-size: 1.45rem; display: flex; gap: 10px; align-items: center; }
+.main h2 i, .main h2 svg { color: var(--red); }
+.main h3 {
+  margin: 24px 0 8px; font-size: 0.85rem; color: var(--muted); font-weight: 600;
+  text-transform: uppercase; letter-spacing: .08em;
+}
+
+.row { display: flex; align-items: center; gap: 10px; padding: 10px 6px; border-bottom: 2px dashed var(--box); flex-wrap: wrap; }
+.row:last-child { border-bottom: 0; }
+.av {
+  width: 40px; height: 40px; border-radius: 12px; background: var(--black); color: #fff;
+  border: 2px solid var(--black); flex: none; position: relative; display: grid; place-items: center;
+}
+.av::before { content: "\2605"; font-size: 1rem; color: var(--gold); }
+.av.red { background: var(--red); }
+.av.on::after, .av.off::after {
+  content: ""; position: absolute; right: -4px; bottom: -4px; width: 13px; height: 13px;
+  border-radius: 50%; border: 2px solid var(--surface);
+}
+.av.on::after { background: var(--ok); }
+.av.off::after { background: #a8a8a8; }
+.who { min-width: 0; flex: 1; }
+.who b { display: block; }
+.who small { color: var(--muted); }
+
+/* Buttons: chunky with a pressed-down shadow */
+.btn {
+  border: 2px solid var(--black); background: var(--red); color: #fff; font-weight: 600;
+  font-size: 0.88rem; padding: 6px 13px; border-radius: 12px; cursor: default;
+  box-shadow: 0 3px 0 var(--black); display: inline-flex; gap: 7px; align-items: center;
+}
+.btn.ghost { background: var(--surface); color: var(--ink); }
+.btn.quiet { background: var(--box); color: var(--ink); border-color: var(--line); box-shadow: 0 3px 0 var(--line); }
+.btn[disabled] { opacity: 0.45; }
+.field {
+  display: flex; gap: 8px; align-items: center; border: 3px solid var(--black);
+  border-radius: 14px; padding: 7px 10px; background: var(--surface);
+}
+.field > i, .field > svg { color: var(--muted); }
+.field input { border: 0; background: transparent; font: inherit; color: var(--ink); flex: 1; min-width: 0; outline: none; }
+.empty {
+  border: 2px dashed var(--line); border-radius: 14px; padding: 14px; color: var(--muted);
+  text-align: center; background: #fcfcfc;
+}
+.err { color: var(--danger); font-size: 0.88rem; font-weight: 700; margin-top: 6px; display: flex; gap: 6px; align-items: center; }
+.pill {
+  font-size: 0.78rem; color: var(--ink); border: 2px solid var(--black); border-radius: 999px;
+  padding: 1px 9px; background: var(--box); display: inline-flex; gap: 5px; align-items: center;
+}
+
+/* Note markers: red coins */
+.m {
+  display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 50%;
+  background: var(--red); color: #fff; border: 2px solid var(--black); font-size: 0.72rem;
+  font-weight: 700; flex: none; box-shadow: 1px 2px 0 var(--black);
+}
+.notes { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 12px); }
+.notes h4 { margin: 0 0 12px; font-size: 1.15rem; display: flex; gap: 8px; align-items: center; }
+.notes h4 i, .notes h4 svg { color: var(--red); }
+.notes ol { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+.notes li {
+  display: grid; grid-template-columns: 22px 1fr; gap: 10px; background: var(--surface);
+  border: 2px solid var(--black); border-left: 6px solid var(--red); border-radius: 12px;
+  padding: 10px; font-size: 0.88rem; box-shadow: 3px 3px 0 var(--black);
+}
+.notes code { font-size: 0.8rem; overflow-wrap: anywhere; background: var(--box); padding: 0 4px; border-radius: 4px; }
+.notes .tag { color: var(--red); font-weight: 800; }
+
+.stateswitch { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+.stateswitch button {
+  font: inherit; font-family: "Fredoka", "Nunito", sans-serif; font-size: 0.85rem; font-weight: 600;
+  border: 2px solid var(--black); background: var(--surface); color: var(--ink);
+  padding: 5px 12px; border-radius: 999px; cursor: pointer; box-shadow: 0 3px 0 var(--black);
+}
+.stateswitch button[aria-pressed="true"] { background: var(--black); color: #fff; }
+.hidden { display: none !important; }
+.des { outline: 2px dashed var(--red); outline-offset: 3px; border-radius: 10px; }
+@media (prefers-reduced-motion: no-preference) {
+  .tabs a, .btn, .stateswitch button { transition: transform .12s ease, box-shadow .12s ease; }
+  .tabs a:hover, .stateswitch button:hover { transform: translateY(-2px); }
+}
+
+/* Avatar: four stacked layers */
+.avatar { position: relative; border-radius: 18px; overflow: hidden; flex: none; border: 3px solid var(--black); box-shadow: 4px 4px 0 var(--black); }
+.avatar .bg { position: absolute; inset: 0; background: #ffe3e7; }
+.avatar .bg.stripes { background: repeating-linear-gradient(45deg, #ffd0d7 0 10px, #fff 10px 20px); }
+.avatar .base { position: absolute; left: 22%; right: 22%; top: 26%; bottom: 0; border-radius: 50% 50% 10px 10px; background: var(--red); border: 2px solid var(--black); border-bottom: 0; }
+.avatar .face { position: absolute; left: 37%; right: 37%; top: 44%; height: 8%; border-bottom: 3px solid #fff; border-radius: 0 0 50% 50%; }
+.avatar .face::before, .avatar .face::after { content: ""; position: absolute; top: -12px; width: 6px; height: 6px; border-radius: 50%; background: #fff; }
+.avatar .face::before { left: 8%; } .avatar .face::after { right: 8%; }
+.avatar .acc { position: absolute; left: 25%; right: 25%; top: 13%; height: 15%; background: var(--black); border-radius: 8px 8px 2px 2px; }
+.av-lg { width: 124px; height: 124px; } .av-xl { width: 210px; height: 210px; } .av-sm { width: 44px; height: 44px; border-width: 2px; box-shadow: 2px 2px 0 var(--black); border-radius: 12px; }
+
+.tier {
+  display: inline-flex; align-items: center; gap: 6px; font-weight: 700; border: 2px solid var(--black);
+  border-radius: 999px; padding: 2px 11px; font-size: 0.88rem; background: #e8e8e8; box-shadow: 0 2px 0 var(--black);
+}
+.tier i, .tier svg { color: #7d7d7d; }
+.tier.gold { background: #ffe9a8; } .tier.gold i, .tier.gold svg { color: #b98500; }
+.bar { height: 16px; background: var(--box); border-radius: 999px; overflow: hidden; border: 2px solid var(--black); }
+.bar > i { display: block; height: 100%; background: repeating-linear-gradient(-45deg, var(--red) 0 10px, #e0344f 10px 20px); }
+.stats { display: flex; gap: 14px; flex-wrap: wrap; margin: 12px 0; }
+.stats div { min-width: 120px; background: var(--box); border: 2px solid var(--black); border-radius: 14px; padding: 8px 12px; }
+.stats b { display: flex; gap: 6px; align-items: center; font-size: 1.3rem; font-family: "Fredoka", sans-serif; }
+.stats b i, .stats b svg { color: var(--gold); font-size: 1rem; }
+.stats small { color: var(--muted); }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 14px; }
+.card { border: 3px solid var(--black); border-radius: 16px; padding: 10px; display: flex; flex-direction: column; gap: 6px; background: var(--surface); box-shadow: 4px 4px 0 var(--black); }
+.thumb { height: 76px; border-radius: 12px; background: #ffe3e7; display: grid; place-items: center; color: var(--red); font-size: 2rem; border: 2px solid var(--black); }
+.thumb.small { width: 64px; height: 48px; font-size: 1.3rem; flex: none; }
+.meta { display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--muted); gap: 6px; }
+.price { font-family: "Fredoka", sans-serif; font-weight: 700; color: var(--ink); display: inline-flex; gap: 5px; align-items: center; }
+.price i, .price svg { color: var(--gold); }
+.rarity { font-weight: 800; }
+.rarity.rare { color: #1d5fbf; } .rarity.epic { color: #7a2bbf; } .rarity.legendary { color: #b98500; }
+.chips { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+.chip { border: 2px solid var(--black); border-radius: 999px; padding: 2px 11px; font-size: 0.82rem; font-weight: 700; background: var(--surface); }
+.chip.on { background: var(--black); color: #fff; }
+table.t { width: 100%; border-collapse: collapse; font-size: 0.86rem; }
+table.t th, table.t td { text-align: left; padding: 8px 6px; border-bottom: 2px dashed var(--box); }
+table.t th { color: var(--muted); font-weight: 800; }
+.plus { color: var(--ok); font-weight: 800; } .minus { color: var(--danger); font-weight: 800; }
+.scroll { overflow-x: auto; }
+.ms { display: grid; grid-template-columns: 42px 1fr auto; gap: 12px; align-items: center; padding: 10px 12px; border: 3px solid var(--black); border-radius: 16px; background: var(--surface); }
+.ms.done { background: #ecf8f0; box-shadow: 3px 3px 0 var(--black); }
+.ms .ic { width: 42px; height: 42px; border-radius: 12px; display: grid; place-items: center; border: 2px solid var(--black); font-size: 1.1rem; background: var(--gold); }
+.ms.locked .ic { background: var(--box); color: var(--muted); border-style: dashed; }
+.cols2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+@media (max-width: 660px) { .cols2 { grid-template-columns: 1fr; } }
+.box { border: 3px solid var(--black); border-radius: 16px; padding: 12px; background: var(--surface); }
+.box > b { font-family: "Fredoka", sans-serif; font-size: 1.05rem; }
+.opt { display: flex; gap: 8px; flex-wrap: wrap; }
+.opt span { width: 50px; height: 50px; border-radius: 12px; border: 2px solid var(--black); background: var(--box); display: grid; place-items: center; font-size: 0.7rem; font-weight: 700; color: var(--muted); }
+.opt span.sel { background: var(--red); color: #fff; box-shadow: 0 3px 0 var(--black); }
+.opt span.lock { border-style: dashed; }
+.toast {
+  position: absolute; right: 16px; top: 66px; background: var(--black); color: #fff; border-radius: 14px;
+  padding: 10px 14px; font-size: 0.86rem; max-width: 230px; border: 2px solid var(--gold); z-index: 2;
+  display: flex; gap: 8px; align-items: center;
+}
+.toast i, .toast svg { color: var(--gold); }
+.ok { color: var(--ok); font-weight: 800; }
+
+/* Mystery layer: detective case-file look on top of the game styles */
+body {
+  background-color: #e8e1d2;
+  background-image:
+    radial-gradient(rgba(0, 0, 0, .07) 1px, transparent 1px),
+    radial-gradient(circle at 15% 10%, rgba(200, 16, 46, .06), transparent 40%),
+    radial-gradient(circle at 85% 90%, rgba(0, 0, 0, .08), transparent 45%);
+  background-size: 22px 22px, 100% 100%, 100% 100%;
+}
+h1, h2, h3, h4, .btn, .tabs a, .title, .stateswitch button, .pill, .tier, .badge, .stamp,
+.stats b, .price, .box > b, .chip, .appbar .xp {
+  font-family: "Special Elite", "Courier New", ui-monospace, monospace;
+}
+h1 { font-size: 2.1rem; flex-wrap: wrap; }
+h1 .logo { background: var(--black); color: #fff; transform: rotate(-8deg); }
+.stamp {
+  display: inline-block; border: 3px solid var(--red); color: var(--red); text-transform: uppercase;
+  letter-spacing: .14em; padding: 3px 12px; transform: rotate(-6deg); font-size: .85rem;
+  border-radius: 6px; opacity: .9; background: rgba(255, 255, 255, .4);
+}
+.intro { color: #4a4337; }
+.tabs a { border-radius: 14px 14px 4px 4px; background: #fffaf0; }
+.tabs a[aria-current="page"] { background: var(--red); color: #fff; }
+.frame { background: #fffdf8; }
+.appbar .case { background: var(--red); color: #fff; border-radius: 6px; padding: 2px 8px; font-family: "Special Elite", monospace; font-size: .78rem; letter-spacing: .08em; text-transform: uppercase; }
+.side { background: #f5efe2; }
+.main { background-image: repeating-linear-gradient(transparent 0 29px, rgba(0, 0, 0, .035) 29px 30px); }
+.empty { background: #fffaf0; border-color: #c9bfa8; }
+.row { border-bottom-color: #ebe3d2; }
+
+/* Note markers look like red map pins */
+.m { background: radial-gradient(circle at 35% 30%, #ff7186, var(--red) 55%, #7a0016); }
+
+/* Case notes: taped evidence cards */
+.notes li { position: relative; background: #fffaf0; transform: rotate(-0.6deg); }
+.notes li:nth-child(even) { transform: rotate(0.6deg); }
+.notes li::before {
+  content: ""; position: absolute; top: -9px; left: 50%; width: 56px; height: 16px; margin-left: -28px;
+  background: rgba(200, 16, 46, .22); border: 1px dashed rgba(0, 0, 0, .18); transform: rotate(-4deg);
+}
+.notes h4 { font-size: 1.25rem; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1><span class="logo"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i></span>XP, tiers, avatars, and trading wireframes <span class="stamp">Case file · Story 2</span></h1>
+  <p class="intro">T10 for Story 2, CS4530 Group 202. Five screens built on the existing GameNite layout. Each numbered marker matches a note naming the condition of satisfaction it covers.</p>
+  <div class="legend">
+    <span><span class="m">1</span> Note on the right</span>
+    <span><span class="dashed"></span> Desirable (Sprint 3), not needed for the MVP</span>
+  </div>
+
+  <nav class="tabs" aria-label="Screens">
+    <a href="#profile" data-view="profile"><i class="fa-solid fa-id-badge" aria-hidden="true"></i> Profile and tier</a>
+    <a href="#milestones" data-view="milestones"><i class="fa-solid fa-trophy" aria-hidden="true"></i> Milestones</a>
+    <a href="#store" data-view="store"><i class="fa-solid fa-store" aria-hidden="true"></i> Store and inventory</a>
+    <a href="#avatar" data-view="avatar"><i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i> Avatar editor</a>
+    <a href="#trade" data-view="trade"><i class="fa-solid fa-right-left" aria-hidden="true"></i> Trade offer</a>
+  </nav>
+
+  <!-- PROFILE -->
+  <section class="screen" id="view-profile" aria-label="Profile and tier">
+    <div class="frame">
+      <div class="appbar"><span class="title"><i class="fa-solid fa-user-secret" aria-hidden="true"></i> GameNite!</span><span class="case">Case #202</span><span class="xp"><i class="fa-solid fa-star" aria-hidden="true"></i> 1,320 XP</span>signed in as Yāo <button class="btn quiet"><i class="fa-solid fa-right-from-bracket" aria-hidden="true"></i> Log Out</button></div>
+      <div class="toast des"><span class="m" style="width:16px;height:16px;font-size:.65rem">6</span> <i class="fa-solid fa-star" aria-hidden="true"></i> +25 XP for winning Nim. 180 XP to Gold.</div>
+      <div class="appbody">
+        <div class="side"><span><i class="fa-solid fa-house" aria-hidden="true"></i> Home</span><span><i class="fa-solid fa-gamepad" aria-hidden="true"></i> Games</span><span><i class="fa-solid fa-comments" aria-hidden="true"></i> Forum</span><span><i class="fa-solid fa-user-group" aria-hidden="true"></i> Friends</span><span><i class="fa-solid fa-envelope" aria-hidden="true"></i> Messages</span><span><i class="fa-solid fa-store" aria-hidden="true"></i> Store</span><span class="on"><i class="fa-solid fa-user-astronaut" aria-hidden="true"></i> Profile</span></div>
+        <div class="main">
+          <div style="display:flex;gap:18px;flex-wrap:wrap;align-items:center">
+            <div class="avatar av-lg"><div class="bg stripes"></div><div class="base"></div><div class="face"></div><div class="acc"></div></div>
+            <div style="min-width:0">
+              <h2 style="margin:0 0 6px">Yāo <small style="color:var(--muted);font-weight:400">user1</small></h2>
+              <span class="tier"><span class="m" style="width:16px;height:16px;font-size:.65rem">1</span> <i class="fa-solid fa-medal" aria-hidden="true"></i> Silver</span>
+              <div class="stats">
+                <div><b><i class="fa-solid fa-star" aria-hidden="true"></i> 1,320 <span class="m" style="width:16px;height:16px;font-size:.65rem">5</span></b><small>Lifetime XP</small></div>
+                <div><b><i class="fa-solid fa-coins" aria-hidden="true"></i> 410</b><small>Spendable balance · only you see this</small></div>
+                <div><b><i class="fa-solid fa-gamepad" aria-hidden="true"></i> 14</b><small>Games finished</small></div>
+              </div>
+            </div>
+          </div>
+          <div style="margin-top:6px"><div class="meta"><span>Silver</span><span>180 XP to Gold (1,500)</span></div><div class="bar"><i style="width:73%"></i></div></div>
+          <div style="display:flex;gap:8px;margin-top:14px;flex-wrap:wrap"><span class="m">2</span><button class="btn"><i class="fa-solid fa-pen" aria-hidden="true"></i> Edit avatar</button><button class="btn ghost"><i class="fa-solid fa-trophy" aria-hidden="true"></i> View milestones</button><button class="btn ghost"><i class="fa-solid fa-receipt" aria-hidden="true"></i> History</button></div>
+
+          <h3>Seen by other players</h3>
+          <div class="row"><div class="avatar av-sm"><div class="bg"></div><div class="base"></div><div class="face"></div></div><div class="who"><b>Yāo <span class="tier" style="font-size:.72rem;padding:0 7px"><i class="fa-solid fa-medal" aria-hidden="true"></i> Silver</span></b><small>How your name looks in game lobbies and forum posts</small></div><span class="m">3</span></div>
+
+          <h3>Viewing someone else’s profile</h3>
+          <div class="row"><div class="avatar av-sm"><div class="bg"></div><div class="base"></div></div><div class="who"><b>Sénior Dos <span class="tier gold" style="font-size:.72rem;padding:0 7px"><i class="fa-solid fa-medal" aria-hidden="true"></i> Gold</span></b><small>2,040 lifetime XP</small></div><span class="m">4</span><button class="btn"><i class="fa-solid fa-right-left" aria-hidden="true"></i> Send trade offer</button></div>
+          <div class="row"><div class="avatar av-sm"><div class="bg"></div><div class="base"></div></div><div class="who"><b>New player</b><small>Finished 1 of 3 games needed to trade</small></div><button class="btn" disabled><i class="fa-solid fa-right-left" aria-hidden="true"></i> Send trade offer</button></div>
+        </div>
+      </div>
+    </div>
+    <aside class="notes" aria-label="Profile notes">
+      <h4><i class="fa-solid fa-fingerprint" aria-hidden="true"></i> Case notes</h4>
+      <ol>
+        <li><span class="m">1</span><div><span class="tag">COS 2.3</span> Tier comes from lifetime XP: Bronze 0, Silver 500, Gold 1,500, Platinum 3,000, Diamond 6,000. Spending never lowers it.</div></li>
+        <li><span class="m">2</span><div><span class="tag">COS 2.1, 2.9</span> Lifetime XP and tier are public. The spendable balance and history are shown only to the profile’s owner.</div></li>
+        <li><span class="m">3</span><div><span class="tag">COS 2.3, 2.4</span> Avatar and tier appear next to the username in lobbies and on forum posts.</div></li>
+        <li><span class="m">4</span><div><span class="tag">COS 2.7</span> Trading needs at least 3 finished games. Until then the button is disabled and says why.</div></li>
+        <li><span class="m">5</span><div><span class="tag">COS 2.1</span> XP values are only ever read from the server; nothing on this page can set them.</div></li>
+        <li><span class="m">6</span><div><span class="tag">COS 2.10, Desirable</span> Pop-up after earning XP, with progress to the next tier. A separate pop-up appears on reaching a new tier.</div></li>
+      </ol>
+    </aside>
+  </section>
+
+  <!-- MILESTONES -->
+  <section class="screen" id="view-milestones" aria-label="Milestones page">
+    <div class="frame">
+      <div class="appbar"><span class="title"><i class="fa-solid fa-user-secret" aria-hidden="true"></i> GameNite!</span><span class="case">Case #202</span><span class="xp"><i class="fa-solid fa-star" aria-hidden="true"></i> 1,320 XP</span>signed in as Yāo <button class="btn quiet"><i class="fa-solid fa-right-from-bracket" aria-hidden="true"></i> Log Out</button></div>
+      <div class="appbody">
+        <div class="side"><span><i class="fa-solid fa-house" aria-hidden="true"></i> Home</span><span><i class="fa-solid fa-gamepad" aria-hidden="true"></i> Games</span><span><i class="fa-solid fa-comments" aria-hidden="true"></i> Forum</span><span><i class="fa-solid fa-user-group" aria-hidden="true"></i> Friends</span><span><i class="fa-solid fa-envelope" aria-hidden="true"></i> Messages</span><span><i class="fa-solid fa-store" aria-hidden="true"></i> Store</span><span class="on"><i class="fa-solid fa-user-astronaut" aria-hidden="true"></i> Profile</span></div>
+        <div class="main">
+          <h2><i class="fa-solid fa-trophy" aria-hidden="true"></i> Milestones</h2>
+          <div class="chips"><span class="chip on">All</span><span class="chip">Gameplay</span><span class="chip">Economy</span><span class="chip">Community</span></div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div class="ms done"><div class="ic"><i class="fa-solid fa-trophy" aria-hidden="true"></i></div><div><b>First Win</b><br><small>Win any game</small></div><span class="ok">+50 XP · Done <span class="m">1</span></span></div>
+            <div class="ms done"><div class="ic"><i class="fa-solid fa-trophy" aria-hidden="true"></i></div><div><b>First Purchase</b><br><small>Buy any item from the store</small></div><span class="ok">+25 XP · Done</span></div>
+            <div class="ms locked"><div class="ic"><i class="fa-solid fa-lock" aria-hidden="true"></i></div><div><b>Win 10 Games</b><br><small>Win 10 games of any type</small>
+              <div class="des" style="margin-top:6px;max-width:260px"><div class="meta"><span>7 / 10 wins</span><span class="m" style="width:16px;height:16px;font-size:.65rem">3</span></div><div class="bar"><i style="width:70%"></i></div></div></div><span>+100 XP <span class="m">2</span></span></div>
+            <div class="ms locked"><div class="ic"><i class="fa-solid fa-lock" aria-hidden="true"></i></div><div><b>Win a Game of Every Type</b><br><small>Win at least one Nim, Guess, and Clue game</small></div><span>+150 XP</span></div>
+            <div class="ms locked"><div class="ic"><i class="fa-solid fa-lock" aria-hidden="true"></i></div><div><b>First Trade</b><br><small>Complete a trade with another player</small></div><span>+25 XP</span></div>
+            <div class="ms locked"><div class="ic"><i class="fa-solid fa-lock" aria-hidden="true"></i></div><div><b>First Forum Thread</b><br><small>Start a thread in the forum</small></div><span>+25 XP</span></div>
+            <div class="ms locked"><div class="ic"><i class="fa-solid fa-lock" aria-hidden="true"></i></div><div><b>Make 5 Friends</b><br><small>Have 5 friends at once</small></div><span>+50 XP</span></div>
+            <div class="ms locked"><div class="ic"><i class="fa-solid fa-lock" aria-hidden="true"></i></div><div><b>Reach Gold</b><br><small>Earn 1,500 lifetime XP</small></div><span>+100 XP</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <aside class="notes" aria-label="Milestones notes">
+      <h4><i class="fa-solid fa-fingerprint" aria-hidden="true"></i> Case notes</h4>
+      <ol>
+        <li><span class="m">1</span><div><span class="tag">COS 2.2, 2.3</span> Completed milestones look different and show the XP earned. Each is awarded once and never taken away.</div></li>
+        <li><span class="m">2</span><div><span class="tag">COS 2.3</span> Incomplete milestones show exactly what’s needed. At least 8 milestones cover gameplay, economy, and community.</div></li>
+        <li><span class="m">3</span><div><span class="tag">COS 2.10, Desirable</span> Count-based milestones show progress, like 7/10 wins.</div></li>
+      </ol>
+    </aside>
+  </section>
+
+  <!-- STORE -->
+  <section class="screen" id="view-store" aria-label="Store and inventory">
+    <div class="frame">
+      <div class="appbar"><span class="title"><i class="fa-solid fa-user-secret" aria-hidden="true"></i> GameNite!</span><span class="case">Case #202</span><span class="xp"><i class="fa-solid fa-star" aria-hidden="true"></i> 1,320 XP</span>signed in as Yāo <button class="btn quiet"><i class="fa-solid fa-right-from-bracket" aria-hidden="true"></i> Log Out</button></div>
+      <div class="appbody">
+        <div class="side"><span><i class="fa-solid fa-house" aria-hidden="true"></i> Home</span><span><i class="fa-solid fa-gamepad" aria-hidden="true"></i> Games</span><span><i class="fa-solid fa-comments" aria-hidden="true"></i> Forum</span><span><i class="fa-solid fa-user-group" aria-hidden="true"></i> Friends</span><span><i class="fa-solid fa-envelope" aria-hidden="true"></i> Messages</span><span class="on"><i class="fa-solid fa-store" aria-hidden="true"></i> Store</span><span><i class="fa-solid fa-user-astronaut" aria-hidden="true"></i> Profile</span></div>
+        <div class="main">
+          <div class="stateswitch" role="group" aria-label="Store view">
+            <button type="button" data-state="shop" aria-pressed="true">Store</button>
+            <button type="button" data-state="inventory" aria-pressed="false">Inventory and history</button>
+          </div>
+          <div data-part="shop">
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap"><h2 style="margin:0"><i class="fa-solid fa-store" aria-hidden="true"></i> Store</h2><span class="pill">Balance: 410 XP</span></div>
+            <div class="chips" style="margin-top:12px"><span class="chip on">All</span><span class="chip">Base</span><span class="chip">Face</span><span class="chip">Accessory</span><span class="chip">Background</span></div>
+            <div class="grid">
+              <div class="card"><div class="thumb"><i class="fa-solid fa-hat-wizard" aria-hidden="true"></i></div><b>Husky Hat</b><div class="meta"><span>Accessory</span><span class="rarity">Common</span></div><div class="meta"><span class="price"><i class="fa-solid fa-coins" aria-hidden="true"></i> 120 XP</span></div><span class="m">1</span><button class="btn"><i class="fa-solid fa-cart-shopping" aria-hidden="true"></i> Buy</button></div>
+              <div class="card"><div class="thumb"><i class="fa-solid fa-moon" aria-hidden="true"></i></div><b>Snell Night</b><div class="meta"><span>Background</span><span class="rarity rare">Rare</span></div><div class="meta"><span class="price"><i class="fa-solid fa-coins" aria-hidden="true"></i> 300 XP</span></div><span class="pill" style="justify-content:center"><i class="fa-solid fa-check" aria-hidden="true"></i> Owned</span></div>
+              <div class="card"><div class="thumb"><i class="fa-solid fa-crown" aria-hidden="true"></i></div><b>Gold Crown</b><div class="meta"><span>Accessory</span><span class="rarity epic">Epic</span></div><div class="meta"><span class="price"><i class="fa-solid fa-coins" aria-hidden="true"></i> 650 XP</span></div><button class="btn" disabled><i class="fa-solid fa-cart-shopping" aria-hidden="true"></i> Buy</button><div class="err"><span class="m" style="width:16px;height:16px;font-size:.65rem">2</span> Not enough XP. You need 240 more.</div></div>
+              <div class="card des"><div class="thumb"><i class="fa-solid fa-glasses" aria-hidden="true"></i></div><b>Diamond Glasses</b><div class="meta"><span>Face</span><span class="rarity legendary">Legendary</span></div><div class="meta"><span class="price"><i class="fa-solid fa-coins" aria-hidden="true"></i> 900 XP</span><span><i class="fa-solid fa-medal" aria-hidden="true"></i> Gold tier+</span></div><div class="meta"><span>3 of 20 left</span></div><span class="m">3</span><button class="btn" disabled><i class="fa-solid fa-lock" aria-hidden="true"></i> Reach Gold to buy</button></div>
+            </div>
+            <div class="empty des" style="margin-top:12px"><span class="m">4</span> Preview on my avatar: hover or tap an item to see it on your avatar before buying.</div>
+          </div>
+          <div data-part="inventory" class="hidden">
+            <h2><i class="fa-solid fa-box-open" aria-hidden="true"></i> Inventory</h2>
+            <div class="row"><div class="thumb small"><i class="fa-solid fa-moon" aria-hidden="true"></i></div><div class="who"><b>Snell Night</b><small>Bought from store · 16 hours ago</small></div><span class="m">5</span><button class="btn"><i class="fa-solid fa-shirt" aria-hidden="true"></i> Equip</button><button class="btn ghost"><i class="fa-solid fa-rotate-left" aria-hidden="true"></i> Return (32h left)</button></div>
+            <div class="row"><div class="thumb small"><i class="fa-solid fa-clover" aria-hidden="true"></i></div><div class="who"><b>Clover Scarf</b><small>Received in a trade · can’t be returned</small></div><button class="btn"><i class="fa-solid fa-shirt" aria-hidden="true"></i> Equip</button></div>
+            <div class="row"><div class="thumb small"><i class="fa-solid fa-face-smile" aria-hidden="true"></i></div><div class="who"><b>Classic Smile</b><small>Free starter item · can’t be returned</small></div><span class="pill"><i class="fa-solid fa-check" aria-hidden="true"></i> Equipped</span></div>
+            <p style="color:var(--muted);font-size:.85rem">2 of 3 returns used in the last 7 days.</p>
+            <h3>History <span class="m" style="vertical-align:middle">6</span></h3>
+            <div class="scroll"><table class="t">
+              <thead><tr><th>When</th><th>What</th><th>Item</th><th>XP</th><th>Balance</th></tr></thead>
+              <tbody>
+                <tr><td>Today</td><td>Purchase</td><td>Snell Night</td><td class="minus">−300</td><td>410</td></tr>
+                <tr><td>Yesterday</td><td>Game won</td><td>Nim</td><td class="plus">+25</td><td>710</td></tr>
+                <tr><td>Mon</td><td>Trade with user2</td><td>Clover Scarf (got)</td><td class="minus">−50</td><td>685</td></tr>
+                <tr><td>Sun</td><td>Return</td><td>Neon Cap</td><td class="plus">+150</td><td>735</td></tr>
+              </tbody>
+            </table></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <aside class="notes" aria-label="Store notes">
+      <h4><i class="fa-solid fa-fingerprint" aria-hidden="true"></i> Case notes</h4>
+      <ol>
+        <li><span class="m">1</span><div><span class="tag">COS 2.5</span> Each item shows name, preview, category, rarity, and price. Owned items are marked. Buying takes the XP and adds the item in one step, or does neither.</div></li>
+        <li><span class="m">2</span><div><span class="tag">COS 2.5</span> Not enough balance, or already owned: a clear message and nothing changes.</div></li>
+        <li><span class="m">3</span><div><span class="tag">COS 2.12, Desirable</span> Tier-locked and limited-stock items. A return puts a copy back in stock.</div></li>
+        <li><span class="m">4</span><div><span class="tag">COS 2.11, Desirable</span> Preview an item on your own avatar before buying.</div></li>
+        <li><span class="m">5</span><div><span class="tag">COS 2.6</span> Store purchases can be returned within 48 hours, at most 3 times in 7 days. Returning unequips the item. Traded and free items have no Return button.</div></li>
+        <li><span class="m">6</span><div><span class="tag">COS 2.9</span> Every earning, purchase, return, and trade is listed. The balance column always matches the sum of the entries.</div></li>
+      </ol>
+    </aside>
+  </section>
+
+  <!-- AVATAR -->
+  <section class="screen" id="view-avatar" aria-label="Avatar editor">
+    <div class="frame">
+      <div class="appbar"><span class="title"><i class="fa-solid fa-user-secret" aria-hidden="true"></i> GameNite!</span><span class="case">Case #202</span><span class="xp"><i class="fa-solid fa-star" aria-hidden="true"></i> 1,320 XP</span>signed in as Yāo <button class="btn quiet"><i class="fa-solid fa-right-from-bracket" aria-hidden="true"></i> Log Out</button></div>
+      <div class="appbody">
+        <div class="side"><span><i class="fa-solid fa-house" aria-hidden="true"></i> Home</span><span><i class="fa-solid fa-gamepad" aria-hidden="true"></i> Games</span><span><i class="fa-solid fa-comments" aria-hidden="true"></i> Forum</span><span><i class="fa-solid fa-user-group" aria-hidden="true"></i> Friends</span><span><i class="fa-solid fa-envelope" aria-hidden="true"></i> Messages</span><span><i class="fa-solid fa-store" aria-hidden="true"></i> Store</span><span class="on"><i class="fa-solid fa-user-astronaut" aria-hidden="true"></i> Profile</span></div>
+        <div class="main">
+          <h2><i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i> Edit avatar</h2>
+          <div class="cols2">
+            <div class="box" style="display:grid;place-items:center;gap:10px">
+              <div class="avatar av-xl"><div class="bg stripes"></div><div class="base"></div><div class="face"></div><div class="acc"></div></div>
+              <small style="color:var(--muted)"><span class="m" style="width:16px;height:16px;font-size:.65rem">1</span> Live preview</small>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:12px">
+              <div><b>Base and color</b><div class="opt" style="margin-top:6px"><span class="sel">gray</span><span>blue</span><span>red</span><span>green</span></div></div>
+              <div><b>Face</b><div class="opt" style="margin-top:6px"><span class="sel">smile</span><span>grin</span><span class="lock"><i class="fa-solid fa-lock" aria-hidden="true"></i></span></div></div>
+              <div><b>Accessory</b><div class="opt" style="margin-top:6px"><span>none</span><span class="sel">cap</span><span class="lock"><i class="fa-solid fa-lock" aria-hidden="true"></i></span><span class="lock"><i class="fa-solid fa-lock" aria-hidden="true"></i></span></div></div>
+              <div><b>Background</b><div class="opt" style="margin-top:6px"><span>plain</span><span class="sel">stripes</span><span class="lock"><i class="fa-solid fa-lock" aria-hidden="true"></i></span></div></div>
+              <small style="color:var(--muted)"><span class="m" style="width:16px;height:16px;font-size:.65rem">2</span> <i class="fa-solid fa-lock" aria-hidden="true"></i> items aren’t owned yet. Tapping one links to it in the store.</small>
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;margin-top:16px;justify-content:flex-end"><span class="m">3</span><button class="btn ghost"><i class="fa-solid fa-xmark" aria-hidden="true"></i> Cancel</button><button class="btn"><i class="fa-solid fa-floppy-disk" aria-hidden="true"></i> Save</button></div>
+        </div>
+      </div>
+    </div>
+    <aside class="notes" aria-label="Avatar notes">
+      <h4><i class="fa-solid fa-fingerprint" aria-hidden="true"></i> Case notes</h4>
+      <ol>
+        <li><span class="m">1</span><div><span class="tag">COS 2.4</span> Four layers: base and color, face, accessory, background. The preview updates as options change. New accounts start with a default avatar.</div></li>
+        <li><span class="m">2</span><div><span class="tag">COS 2.4, 2.5</span> Free base options are open to everyone. Only owned items can be equipped, and the server rejects anything else.</div></li>
+        <li><span class="m">3</span><div><span class="tag">COS 2.4</span> Save keeps the changes. Cancel throws them away.</div></li>
+      </ol>
+    </aside>
+  </section>
+
+  <!-- TRADE -->
+  <section class="screen" id="view-trade" aria-label="Trade offer">
+    <div class="frame">
+      <div class="appbar"><span class="title"><i class="fa-solid fa-user-secret" aria-hidden="true"></i> GameNite!</span><span class="case">Case #202</span><span class="xp"><i class="fa-solid fa-star" aria-hidden="true"></i> 1,320 XP</span>signed in as Yāo <button class="btn quiet"><i class="fa-solid fa-right-from-bracket" aria-hidden="true"></i> Log Out</button></div>
+      <div class="appbody">
+        <div class="side"><span><i class="fa-solid fa-house" aria-hidden="true"></i> Home</span><span><i class="fa-solid fa-gamepad" aria-hidden="true"></i> Games</span><span><i class="fa-solid fa-comments" aria-hidden="true"></i> Forum</span><span><i class="fa-solid fa-user-group" aria-hidden="true"></i> Friends</span><span><i class="fa-solid fa-envelope" aria-hidden="true"></i> Messages</span><span><i class="fa-solid fa-store" aria-hidden="true"></i> Store</span><span class="on"><i class="fa-solid fa-user-astronaut" aria-hidden="true"></i> Profile</span></div>
+        <div class="main">
+          <div class="stateswitch" role="group" aria-label="Trade state">
+            <button type="button" data-state="build" aria-pressed="true">Build offer</button>
+            <button type="button" data-state="confirm" aria-pressed="false">Confirm (recipient)</button>
+            <button type="button" data-state="failed" aria-pressed="false">Trade failed</button>
+          </div>
+
+          <div data-part="build">
+            <h2><i class="fa-solid fa-right-left" aria-hidden="true"></i> New trade offer</h2>
+            <div style="display:flex;gap:8px;align-items:center"><span class="m">1</span><div class="field" style="flex:1"><i class="fa-solid fa-user" aria-hidden="true"></i><input aria-label="Trade with" value="user2" readonly><span class="pill">Sénior Dos</span></div></div>
+            <div class="cols2" style="margin-top:14px">
+              <div class="box"><b>You give</b>
+                <div class="row"><input type="checkbox" checked aria-label="Snell Night"><div class="who">Snell Night</div></div>
+                <div class="row"><input type="checkbox" aria-label="Clover Scarf" disabled><div class="who">Clover Scarf <small>· free item, can’t be traded</small></div></div>
+                <div style="margin-top:8px"><span class="m">2</span> <b>XP</b> <div class="field" style="margin-top:6px"><input aria-label="XP to add" value="100" readonly><small style="color:var(--muted)">max 500 · balance 410</small></div></div>
+              </div>
+              <div class="box"><b>You get</b>
+                <div class="row"><input type="checkbox" checked aria-label="Gold Crown"><div class="who">Gold Crown</div></div>
+                <div class="row"><input type="checkbox" aria-label="Husky Hat"><div class="who">Husky Hat</div></div>
+              </div>
+            </div>
+            <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:14px"><button class="btn ghost">Cancel</button><button class="btn"><i class="fa-solid fa-eye" aria-hidden="true"></i> Review offer</button></div>
+          </div>
+
+          <div data-part="confirm" class="hidden">
+            <h2><i class="fa-solid fa-envelope-open-text" aria-hidden="true"></i> Trade offer from Yāo</h2>
+            <p style="color:var(--muted);margin-top:-6px">Expires in 23 hours <span class="m">3</span></p>
+            <div class="cols2">
+              <div class="box"><b>You give</b><ul><li>Gold Crown</li></ul></div>
+              <div class="box"><b>You get</b><ul><li>Snell Night</li><li>100 XP</li></ul></div>
+            </div>
+            <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:14px;flex-wrap:wrap"><span class="m">4</span><button class="btn ghost des"><i class="fa-solid fa-reply" aria-hidden="true"></i> Counter-offer</button><button class="btn ghost"><i class="fa-solid fa-xmark" aria-hidden="true"></i> Decline</button><button class="btn"><i class="fa-solid fa-handshake" aria-hidden="true"></i> Accept trade</button></div>
+          </div>
+
+          <div data-part="failed" class="hidden">
+            <h2><i class="fa-solid fa-envelope-open-text" aria-hidden="true"></i> Trade offer from Yāo</h2>
+            <div class="empty" style="text-align:left;color:var(--danger);border-color:var(--danger)"><span class="m">5</span> This trade couldn’t be completed: Yāo no longer owns Snell Night. Nothing was changed.</div>
+            <div style="display:flex;justify-content:flex-end;margin-top:14px"><button class="btn"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i> Back to offers</button></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <aside class="notes" aria-label="Trade notes">
+      <h4><i class="fa-solid fa-fingerprint" aria-hidden="true"></i> Case notes</h4>
+      <ol>
+        <li><span class="m">1</span><div><span class="tag">COS 2.7, 2.8</span> Find the other player by username. You can’t trade with yourself, and you need 3 finished games.</div></li>
+        <li><span class="m">2</span><div><span class="tag">COS 2.7, 2.8</span> Up to 500 XP from the sender, never leaving a balance below 0. Free default items can’t be traded.</div></li>
+        <li><span class="m">3</span><div><span class="tag">COS 2.7</span> Both users see exactly what each side gives and gets before anything is final. Offers expire after 24 hours, and the sender can cancel.</div></li>
+        <li><span class="m">4</span><div><span class="tag">COS 2.13, Desirable</span> A counter-offer replaces the original. Traded items can’t be traded again for 24 hours.</div></li>
+        <li><span class="m">5</span><div><span class="tag">COS 2.8</span> On accept, the server re-checks ownership and balances and swaps everything at once, or fails with a clear message and changes nothing.</div></li>
+      </ol>
+    </aside>
+  </section>
+</div>
+
+<script>
+(function () {
+  var views = ["profile", "milestones", "store", "avatar", "trade"];
+  function show(view) {
+    if (views.indexOf(view) === -1) view = "profile";
+    views.forEach(function (v) { document.getElementById("view-" + v).classList.toggle("active", v === view); });
+    document.querySelectorAll(".tabs a").forEach(function (a) {
+      if (a.dataset.view === view) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current");
+    });
+  }
+  window.addEventListener("hashchange", function () { show(location.hash.slice(1)); });
+  show(location.hash.slice(1));
+  document.querySelectorAll(".stateswitch").forEach(function (group) {
+    var screen = group.closest(".screen");
+    var buttons = group.querySelectorAll("button");
+    buttons.forEach(function (b) {
+      b.addEventListener("click", function () {
+        buttons.forEach(function (x) {
+          x.setAttribute("aria-pressed", String(x === b));
+          var part = screen.querySelector('[data-part="' + x.dataset.state + '"]');
+          if (part) part.classList.toggle("hidden", x !== b);
+        });
+      });
+    });
+  });
+})();
+</script>
+</body>
+</html>

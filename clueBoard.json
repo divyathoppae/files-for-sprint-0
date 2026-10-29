@@ -1,0 +1,337 @@
+{
+  "version": 1,
+  "width": 24,
+  "height": 25,
+  "legend": {
+    ".": "hallway",
+    "#": "wall",
+    "X": "center (not playable)",
+    "K": "stetsonEast",
+    "B": "curry",
+    "C": "isec",
+    "D": "internationalVillage",
+    "R": "marino",
+    "L": "snell",
+    "O": "westVillageH",
+    "H": "ellHall",
+    "S": "exp"
+  },
+  "grid": [
+    "#########.####.#########",
+    "KKKKKK............CCCCCC",
+    "KKKKKK..BBBBBBBB..CCCCCC",
+    "KKKKKK..BBBBBBBB..CCCCCC",
+    "KKKKKK..BBBBBBBB..CCCCCC",
+    "KKKKKK..BBBBBBBB..CCCCCC",
+    "KKKKKK..BBBBBBBB........",
+    "#.......BBBBBBBB.......#",
+    "#.................RRRRRR",
+    "DDDDDDDD..........RRRRRR",
+    "DDDDDDDD.XXXXX....RRRRRR",
+    "DDDDDDDD.XXXXX....RRRRRR",
+    "DDDDDDDD.XXXXX....RRRRRR",
+    "DDDDDDDD.XXXXX.........#",
+    "DDDDDDDD.XXXXX...LLLLLLL",
+    "DDDDDDDD.XXXXX...LLLLLLL",
+    "#........XXXXX...LLLLLLL",
+    ".................LLLLLLL",
+    "#........HHHHHH..LLLLLLL",
+    "OOOOOOO..HHHHHH.........",
+    "OOOOOOO..HHHHHH........#",
+    "OOOOOOO..HHHHHH..SSSSSSS",
+    "OOOOOOO..HHHHHH..SSSSSSS",
+    "OOOOOOO..HHHHHH..SSSSSSS",
+    "OOOOOOO.#HHHHHH##SSSSSSS"
+  ],
+  "rooms": [
+    {
+      "id": "stetsonEast",
+      "symbol": "K",
+      "name": "Stetson East",
+      "classicRoom": "Kitchen"
+    },
+    {
+      "id": "curry",
+      "symbol": "B",
+      "name": "Curry Student Center",
+      "classicRoom": "Ballroom"
+    },
+    {
+      "id": "isec",
+      "symbol": "C",
+      "name": "ISEC",
+      "classicRoom": "Conservatory"
+    },
+    {
+      "id": "internationalVillage",
+      "symbol": "D",
+      "name": "International Village",
+      "classicRoom": "Dining Room"
+    },
+    {
+      "id": "marino",
+      "symbol": "R",
+      "name": "Marino Recreation Center",
+      "classicRoom": "Billiard Room"
+    },
+    {
+      "id": "snell",
+      "symbol": "L",
+      "name": "Snell Library",
+      "classicRoom": "Library"
+    },
+    {
+      "id": "westVillageH",
+      "symbol": "O",
+      "name": "West Village H",
+      "classicRoom": "Lounge"
+    },
+    {
+      "id": "ellHall",
+      "symbol": "H",
+      "name": "Ell Hall",
+      "classicRoom": "Hall"
+    },
+    {
+      "id": "exp",
+      "symbol": "S",
+      "name": "EXP",
+      "classicRoom": "Study"
+    }
+  ],
+  "doors": [
+    {
+      "room": "stetsonEast",
+      "hallway": {
+        "x": 4,
+        "y": 7
+      },
+      "roomSquare": {
+        "x": 4,
+        "y": 6
+      }
+    },
+    {
+      "room": "curry",
+      "hallway": {
+        "x": 7,
+        "y": 5
+      },
+      "roomSquare": {
+        "x": 8,
+        "y": 5
+      }
+    },
+    {
+      "room": "curry",
+      "hallway": {
+        "x": 16,
+        "y": 5
+      },
+      "roomSquare": {
+        "x": 15,
+        "y": 5
+      }
+    },
+    {
+      "room": "curry",
+      "hallway": {
+        "x": 9,
+        "y": 8
+      },
+      "roomSquare": {
+        "x": 9,
+        "y": 7
+      }
+    },
+    {
+      "room": "curry",
+      "hallway": {
+        "x": 14,
+        "y": 8
+      },
+      "roomSquare": {
+        "x": 14,
+        "y": 7
+      }
+    },
+    {
+      "room": "isec",
+      "hallway": {
+        "x": 18,
+        "y": 6
+      },
+      "roomSquare": {
+        "x": 18,
+        "y": 5
+      }
+    },
+    {
+      "room": "marino",
+      "hallway": {
+        "x": 17,
+        "y": 9
+      },
+      "roomSquare": {
+        "x": 18,
+        "y": 9
+      }
+    },
+    {
+      "room": "marino",
+      "hallway": {
+        "x": 22,
+        "y": 13
+      },
+      "roomSquare": {
+        "x": 22,
+        "y": 12
+      }
+    },
+    {
+      "room": "snell",
+      "hallway": {
+        "x": 16,
+        "y": 16
+      },
+      "roomSquare": {
+        "x": 17,
+        "y": 16
+      }
+    },
+    {
+      "room": "snell",
+      "hallway": {
+        "x": 20,
+        "y": 13
+      },
+      "roomSquare": {
+        "x": 20,
+        "y": 14
+      }
+    },
+    {
+      "room": "exp",
+      "hallway": {
+        "x": 17,
+        "y": 20
+      },
+      "roomSquare": {
+        "x": 17,
+        "y": 21
+      }
+    },
+    {
+      "room": "ellHall",
+      "hallway": {
+        "x": 11,
+        "y": 17
+      },
+      "roomSquare": {
+        "x": 11,
+        "y": 18
+      }
+    },
+    {
+      "room": "ellHall",
+      "hallway": {
+        "x": 12,
+        "y": 17
+      },
+      "roomSquare": {
+        "x": 12,
+        "y": 18
+      }
+    },
+    {
+      "room": "ellHall",
+      "hallway": {
+        "x": 15,
+        "y": 20
+      },
+      "roomSquare": {
+        "x": 14,
+        "y": 20
+      }
+    },
+    {
+      "room": "westVillageH",
+      "hallway": {
+        "x": 6,
+        "y": 18
+      },
+      "roomSquare": {
+        "x": 6,
+        "y": 19
+      }
+    },
+    {
+      "room": "internationalVillage",
+      "hallway": {
+        "x": 8,
+        "y": 12
+      },
+      "roomSquare": {
+        "x": 7,
+        "y": 12
+      }
+    },
+    {
+      "room": "internationalVillage",
+      "hallway": {
+        "x": 6,
+        "y": 8
+      },
+      "roomSquare": {
+        "x": 6,
+        "y": 9
+      }
+    }
+  ],
+  "tunnels": [
+    {
+      "between": [
+        "stetsonEast",
+        "exp"
+      ]
+    },
+    {
+      "between": [
+        "isec",
+        "westVillageH"
+      ]
+    }
+  ],
+  "startingSquares": [
+    {
+      "suspect": "missScarlet",
+      "x": 7,
+      "y": 24
+    },
+    {
+      "suspect": "colonelMustard",
+      "x": 0,
+      "y": 17
+    },
+    {
+      "suspect": "mrsWhite",
+      "x": 9,
+      "y": 0
+    },
+    {
+      "suspect": "mrGreen",
+      "x": 14,
+      "y": 0
+    },
+    {
+      "suspect": "mrsPeacock",
+      "x": 23,
+      "y": 6
+    },
+    {
+      "suspect": "professorPlum",
+      "x": 23,
+      "y": 19
+    }
+  ]
+}
